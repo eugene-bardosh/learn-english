@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    user: ${CURRENT_UID}
+    build:
+      context: .
+      target: dev
+    tty: true
+    volumes:
+      - ./learn_english:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - config/.dev.env
+    command:
+      - python
+      - manage.py
+      - runserver
+      - 0.0.0.0:8000
+
+  db:
+    image: postgres:15.1-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file:
+      - config/.dev.env
+
+volumes:
+  db:
